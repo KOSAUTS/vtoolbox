@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'; // サーバーサイド�
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url); // リクエストのURLから検索パラメータとオリジンを取得
   const code = searchParams.get('code'); // `code` パラメータを取得
-  const next = searchParams.get('next') ?? '/'; // `next` パラメータが存在しない場合は、デフォルトでルートにリダイレクト
+  const next = searchParams.get('next') ?? '/dashboard'; // `next` パラメータが存在しない場合は、デフォルトでダッシュボードにリダイレクト
 
   if (code) {
     const supabase = await createClient(); // Supabaseクライアントを作成

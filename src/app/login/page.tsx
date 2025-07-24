@@ -79,7 +79,7 @@ export default function LoginPage() {
         recaptchaRef.current?.reset();
         setRecaptchaToken(null);
       } else {
-        router.push("/");
+        router.push("/dashboard"); // ダッシュボードページへ遷移
         router.refresh();
       }
     } catch (catchError: unknown) {
