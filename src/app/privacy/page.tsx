@@ -20,6 +20,7 @@ export default function PrivacyPolicyPage() {
         </p>
 
         {/* 必要に応じて、ポリシーの条文を追加してください */}
+        {/* TODO: 後でしっかり作る！ */}
 
         <p className="mt-8">以上</p>
       </div>

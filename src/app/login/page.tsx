@@ -57,8 +57,9 @@ export default function LoginPage() {
         body: JSON.stringify({ token: recaptchaToken }),
       });
 
-      const verifyResult = await verifyResponse.json();
+      const verifyResult = await verifyResponse.json(); // レスポンスをJSONとして解析
 
+      // reCAPTCHAの検証結果を確認
       if (!verifyResult.success) {
         setError("reCAPTCHA検証に失敗しました\nもう一度お試しください");
         recaptchaRef.current?.reset();
@@ -66,6 +67,7 @@ export default function LoginPage() {
         return;
       }
 
+      // Supabaseでのログイン処理
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -74,6 +76,7 @@ export default function LoginPage() {
         },
       });
 
+      // ログインが成功した場合、ダッシュボードにリダイレクト
       if (signInError) {
         setError(signInError.message);
         recaptchaRef.current?.reset();
@@ -100,6 +103,7 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
+      // Twitter OAuthの開始
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "twitter",
         options: {
@@ -107,6 +111,7 @@ export default function LoginPage() {
         },
       });
 
+      // OAuthのエラーを処理
       if (oauthError) {
         setError(oauthError.message);
       }
@@ -123,22 +128,30 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
+      {/* ログインカード */}
       <Card className="w-full max-w-md">
         <CardHeader>
+          {/* タイトル */}
           <CardTitle className="text-2xl font-bold text-center">
             ログイン
           </CardTitle>
+
+          {/* セクションの説明 */}
           <CardDescription className="text-center">
             アカウントにログインしてください
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* エラーメッセージの表示 */}
           {error && (
             <div className="mb-4 p-3 bg-destructive/15 text-destructive rounded-md text-sm whitespace-pre-line">
               {error}
             </div>
           )}
+
+          {/* メールアドレスとパスワードでのログインフォーム */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
+            {/* メールアドレス入力 */}
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
@@ -151,6 +164,8 @@ export default function LoginPage() {
                 disabled={loading}
               />
             </div>
+
+            {/* パスワード入力 */}
             <div className="space-y-2">
               <Label htmlFor="password">パスワード</Label>
               <Input
@@ -164,7 +179,7 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* reCAPTCHAを追加 */}
+            {/* reCAPTCHA */}
             <div className="flex justify-center">
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -174,6 +189,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* ログインボタン */}
             <Button
               type="submit"
               className="w-full"
@@ -188,6 +204,8 @@ export default function LoginPage() {
             <span className="mx-4 text-xs text-muted-foreground">または</span>
             <div className="flex-grow border-t border-muted"></div>
           </div>
+
+          {/* Twitter OAuthログインボタン */}
           <Button
             variant="outline"
             className="w-full"
@@ -198,7 +216,10 @@ export default function LoginPage() {
             {loading ? "処理中..." : "X (旧Twitter)でログイン"}
           </Button>
         </CardContent>
+
+        {/* フッター */}
         <CardFooter className="flex flex-col items-center space-y-2 text-sm">
+          {/* サポートリンク */}
           <p>
             アカウントをお持ちでないですか？
             <Link
@@ -208,12 +229,16 @@ export default function LoginPage() {
               アカウント作成
             </Link>
           </p>
+
+          {/* パスワードリセットリンク */}
           <Link
             href="/password-reset"
             className="font-medium text-primary hover:underline"
           >
             パスワードをお忘れですか？
           </Link>
+
+          {/* 利用規約とプライバシーポリシー */}
           <div className="flex space-x-4 mt-4 text-xs text-muted-foreground">
             <Link href="/terms" className="hover:text-primary hover:underline">
               利用規約

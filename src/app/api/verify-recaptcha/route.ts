@@ -4,6 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const { token } = await request.json();
 
+    // トークンが提供されていない場合のエラーハンドリング
     if (!token) {
       return NextResponse.json({ success: false, error: 'トークンが提供されていません' }, { status: 400 });
     }
@@ -17,8 +18,9 @@ export async function POST(request: NextRequest) {
       body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
     });
 
-    const result = await response.json();
+    const result = await response.json(); // レスポンスをJSONとして解析
 
+    // reCAPTCHAの検証結果を確認
     if (result.success) {
       return NextResponse.json({ success: true });
     } else {

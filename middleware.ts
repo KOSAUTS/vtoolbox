@@ -3,17 +3,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 import type { CookieOptions } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
+  // リクエストのヘッダーを保持するためのNextResponseオブジェクトを作成
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
+  // Supabaseのサーバーサイドクライアントを作成
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
+        // リクエストからCookieを取得
         get(name: string) {
           return request.cookies.get(name)?.value
         },
@@ -78,6 +81,7 @@ export async function middleware(request: NextRequest) {
   return response
 }
 
+// このミドルウェアは、Next.jsのルーティングに基づいてリクエストを処理
 export const config = {
   matcher: [
     /*

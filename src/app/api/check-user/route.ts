@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       perPage: 1000
     })
 
+    // エラーハンドリング
     if (error) {
       return NextResponse.json({ error: 'ユーザーチェック中にエラーが発生しました' }, { status: 500 })
     }

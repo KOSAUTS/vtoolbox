@@ -41,6 +41,7 @@ export default function SignUpPage() {
     setError(null);
     setMessage(null);
 
+    // パスワードの確認
     if (password !== confirmPassword) {
       setError("パスワードが一致しません");
       return;
@@ -63,8 +64,9 @@ export default function SignUpPage() {
         body: JSON.stringify({ token: recaptchaToken }),
       });
 
-      const verifyResult = await verifyResponse.json();
+      const verifyResult = await verifyResponse.json(); // レスポンスをJSONとして解析
 
+      // reCAPTCHAの検証結果を確認
       if (!verifyResult.success) {
         setError("reCAPTCHA検証に失敗しました\nもう一度お試しください");
         recaptchaRef.current?.reset();
@@ -81,8 +83,9 @@ export default function SignUpPage() {
         body: JSON.stringify({ email }),
       });
 
-      const checkResult = await checkResponse.json();
+      const checkResult = await checkResponse.json(); // レスポンスをJSONとして解析
 
+      // ユーザーが既に存在する場合、エラーメッセージを設定
       if (checkResult.exists) {
         setError(
           "このメールアドレスは既に登録されています\nログインページからログインしてください"
@@ -102,11 +105,13 @@ export default function SignUpPage() {
         },
       });
 
+      // サインアップが成功した場合、確認メールを送信
       if (signUpError) {
         setError(signUpError.message);
         recaptchaRef.current?.reset();
         setRecaptchaToken(null);
       } else {
+        // 成功メッセージを設定
         setMessage(
           "確認メールを送信しました！\nメールのリンクをクリックして登録を完了してください"
         );
@@ -140,6 +145,7 @@ export default function SignUpPage() {
         },
       });
 
+      // OAuthのエラーを処理
       if (oauthError) {
         setError(oauthError.message);
         setLoading(false);
@@ -166,16 +172,21 @@ export default function SignUpPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* エラーメッセージの表示 */}
           {error && (
             <div className="mb-4 p-3 bg-destructive/15 text-destructive rounded-md text-sm whitespace-pre-line">
               {error}
             </div>
           )}
+
+          {/* 成功メッセージの表示 */}
           {message && (
             <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md text-sm border border-green-200 whitespace-pre-line">
               {message}
             </div>
           )}
+
+          {/* メールアドレスとパスワードでの登録フォーム */}
           <form onSubmit={handleEmailSignUp} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
