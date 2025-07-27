@@ -4,8 +4,7 @@ import "./globals.css";
 
 const notoSansJp = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
-  // @ts-ignore 型定義が "japanese" サブセットをまだサポートしていない可能性があるため
-  subsets: ["latin", "japanese"], // 'japanese' サブセットを追加
+  subsets: ["latin"], // japaneseサブセットを削除
   weight: ["100", "300", "400", "500", "700", "900"], // 必要に応じてウェイトを指定
 });
 
