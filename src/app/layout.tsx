@@ -1,11 +1,13 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SidebarWrapper } from "@/components/SidebarWrapper"; // ✅ 追加
 
 const notoSansJp = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
-  subsets: ["latin"], // japaneseサブセットを削除
-  weight: ["100", "300", "400", "500", "700", "900"], // 必要に応じてウェイトを指定
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
 
 const geistMono = Geist_Mono({
@@ -21,15 +23,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ja">
       <body
         className={`${notoSansJp.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex">
+          <SidebarWrapper /> {/* ✅ クライアント側でパスによって表示切替 */}
+          <main className="flex-1 min-h-screen ml-64">{children}</main>
+        </div>
       </body>
     </html>
   );
