@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarWrapper } from "@/components/SidebarWrapper"; // ✅ 追加
 
 const notoSansJp = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
@@ -21,6 +20,7 @@ export const metadata: Metadata = {
     "VTuberの配信をもっと楽しく、もっとスムーズに。VToolboxは、配信演出・レイアウト・チャット表示など、配信を支える便利機能が揃ったサポートツールです。",
 };
 
+// withSidebar フラグを layout-level context 経由で渡す
 export default function RootLayout({
   children,
 }: {
@@ -31,10 +31,7 @@ export default function RootLayout({
       <body
         className={`${notoSansJp.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex">
-          <SidebarWrapper /> {/* ✅ クライアント側でパスによって表示切替 */}
-          <main className="flex-1 min-h-screen ml-64">{children}</main>
-        </div>
+        {children}
       </body>
     </html>
   );

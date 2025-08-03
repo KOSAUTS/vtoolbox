@@ -14,7 +14,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { X, Bell, Mail, User } from "lucide-react";
 import Link from "next/link";
 
-export default function DashboardPage() {
+export function DashboardClient() {
   const [showProfileAlert, setShowProfileAlert] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<null | {
     id: number;
@@ -42,7 +42,6 @@ export default function DashboardPage() {
     avatarUrl: "/images/avatar.png",
     subscription: "プレミアムプラン",
   };
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
       {/* アラート */}
