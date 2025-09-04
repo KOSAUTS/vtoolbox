@@ -1,21 +1,28 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server'; // サーバーサイド用のSupabaseクライアント
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url); // リクエストのURLから検索パラメータとオリジンを取得
-  const code = searchParams.get('code'); // `code` パラメータを取得
-  const next = searchParams.get('next') ?? '/dashboard'; // `next` パラメータが存在しない場合は、デフォルトでダッシュボードにリダイレクト
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get('code');
+  const next = searchParams.get('next') ?? '/dashboard';
 
   if (code) {
-    const supabase = await createClient(); // Supabaseクライアントを作成
-    const { error } = await supabase.auth.exchangeCodeForSession(code); // 認証コードをセッションに交換
+    const supabase = await createClient();
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
-    // 認証コードの交換が成功した場合、指定された `next` パスにリダイレクト
     if (!error) {
+      // パスワードリセット時のページ遷移
+      if (data.user && data.user.recovery_sent_at) {
+        // トークンをURLフラグメントに付けて確認ページへリダイレクト
+        const redirectUrl = new URL(`${origin}/auth/reset-password/confirm`);
+        redirectUrl.hash = `access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&type=recovery`;
+        return NextResponse.redirect(redirectUrl);
+      }
+      // 通常の認証フロー
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
-  // 認証コードが無効または存在しない場合、エラーページにリダイレクト
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  // エラーの場合はログインページにリダイレクト
+  return NextResponse.redirect(`${origin}/login?error=auth_error`);
 }
